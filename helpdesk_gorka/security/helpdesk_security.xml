@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_security_category" model="ir.module.category">
+        <field name="name">Helpdesk</field>
+    </record>
+
+<record id="helpdesk_groups_user" model="res.groups">
+    <field name="name">User</field>
+    <field name="category_id" ref="helpdesk_security_category"/>
+    <field name="comment">
+        El usuario puede navegar y modificar
+    </field>
+</record>
+
+<record id="helpdesk_groups_manager" model="res.groups">
+    <field name="name">Manager</field>
+    <field name="category_id" ref="helpdesk_security_category"/>
+    <field name="implied_ids" eval="[(4, ref('helpdesk_groups_user'))]"/>
+    <field name="comment">
+        El administrador tiene plenos privilegios
+    </field>
+    <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+</record>
+
+<record id="helpdesk_tickets_assigned_to_rule" model="ir.rule">
+    <field name="name">Helpdesk Tickets Assigned to</field>
+    <field name="model_id" ref="model_helpdesk_gorka"/>
+    <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+    <field name="groups" eval="[(4, ref('helpdesk_groups_user'))]"/>
+</record>
+
+<record id="helpdesk_tickets_assigned_to_rule" model="ir.rule">
+    <field name="name">Helpdesk Tickets All to</field>
+    <field name="model_id" ref="model_helpdesk_gorka"/>
+    <field name="groups" eval="[(4, ref('helpdesk_groups_manager'))]"/>
+</record>
+
+</odoo>
